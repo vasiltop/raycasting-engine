@@ -100,7 +100,7 @@ static void render() {
                 ipos.x += step.x;
                 side = 0;
             } else {
-                sideDist.x += deltaDist.y;
+                sideDist.y += deltaDist.y;
                 ipos.y += step.y;
                 side = 1;
             }
@@ -184,22 +184,21 @@ int main(int argc, char *argv[]) {
         const u8 *keystate = SDL_GetKeyboardState(NULL);
 
         if (keystate[SDL_SCANCODE_LEFT]) {
-            double oldDirx = state.dir.x;
-            state.dir.x = state.dir.x * cos(rotspeed) - state.dir.y * sin(rotspeed);
-            state.dir.y = oldDirx * sin(rotspeed) + state.dir.y * cos(rotspeed);
-            double oldPlaneX = state.plane.x;
-            state.plane.x = state.plane.x * cos(rotspeed) - state.plane.y * sin(rotspeed);
-            state.plane.x = oldPlaneX * sin(rotspeed) - state.plane.y * cos(rotspeed);
+            v2 d = state.dir, p = state.plane;
+            state.dir.x = d.x * cos(rotspeed) - d.y * sin(rotspeed);
+            state.dir.y = d.x * sin(rotspeed) + d.y * cos(rotspeed);
+            state.plane.x = p.x * cos(rotspeed) - p.y * sin(rotspeed);
+            state.plane.y = p.x * sin(rotspeed) + p.y * cos(rotspeed);
         }
 
         if (keystate[SDL_SCANCODE_RIGHT]) {
-            double oldDirx = state.dir.x;
-            state.dir.x = state.dir.x * cos(-rotspeed) - state.dir.y * sin(-rotspeed);
-            state.dir.y = oldDirx * sin(-rotspeed) + state.dir.y * cos(-rotspeed);
-            double oldPlaneX = state.plane.x;
-            state.plane.x = state.plane.x * cos(-rotspeed) - state.plane.y * sin(-rotspeed);
-            state.plane.x = oldPlaneX * sin(-rotspeed) - state.plane.y * cos(-rotspeed);
+            v2 d = state.dir, p = state.plane;
+            state.dir.x = d.x * cos(-rotspeed) - d.y * sin(-rotspeed);
+            state.dir.y = d.x * sin(-rotspeed) + d.y * cos(-rotspeed);
+            state.plane.x = p.x * cos(-rotspeed) - p.y * sin(-rotspeed);
+            state.plane.y = p.x * sin(-rotspeed) + p.y * cos(-rotspeed);
         }
+   
 
         if (keystate[SDL_SCANCODE_UP]) {
             state.pos.x += state.dir.x * movespeed;
