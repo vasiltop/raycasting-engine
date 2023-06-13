@@ -3,18 +3,10 @@
 #include <stdio.h>
 #include <math.h>
 
-#define SCREEN_WIDTH 384
-#define SCREEN_HEIGHT 216
+#define SCREEN_WIDTH 1600
+#define SCREEN_HEIGHT 900
 #define ASSERT(_e, ...) if (!(_e)) { fprintf(stderr, __VA_ARGS__); exit(1); }
 
-#define dot(v0, v1)                  \
-    ({ const v2 _v0 = (v0), _v1 = (v1); (_v0.x * _v1.x) + (_v0.y * _v1.y); })
-#define length(v) ({ const v2 _v = (v); sqrtf(dot(_v, _v)); })
-#define normalize(u) ({              \
-        const v2 _u = (u);           \
-        const f32 l = length(_u);    \
-        (v2) { _u.x / l, _u.y / l }; \
-    })
 typedef uint32_t u32;
 typedef uint8_t u8;
 typedef float f32;
@@ -135,7 +127,9 @@ static void render() {
         int drawEnd = lineHeight / 2 + SCREEN_HEIGHT / 2;
         if(drawEnd >= SCREEN_HEIGHT) drawEnd = SCREEN_HEIGHT - 1;
         
+        verticalLine(x, 0, drawStart, 0xFF202020);
         verticalLine(x, drawStart, drawEnd, color);
+        verticalLine(x, drawEnd, SCREEN_HEIGHT - 1, 0xFF505050);
         
     }
 }
@@ -165,8 +159,8 @@ int main(int argc, char *argv[]) {
     ASSERT(state.texture, "failed to create SDL texture: %s\n", SDL_GetError());
 
 
-    state.pos = (v2) { 2, 2 };
-    state.dir = normalize(((v2) { -1.0f, 0.1f }));
+    state.pos = (v2) { 6, 6 };
+    state.dir = (v2) { -1.0f, 0.1f };
     state.plane = (v2) { 0.0f, 0.66f };
 
     while(!state.quit) {
@@ -201,6 +195,7 @@ int main(int argc, char *argv[]) {
    
 
         if (keystate[SDL_SCANCODE_UP]) {
+
             state.pos.x += state.dir.x * movespeed;
             state.pos.y += state.dir.y * movespeed;
         }
