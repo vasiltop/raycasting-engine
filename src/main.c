@@ -31,12 +31,16 @@ static u8 MAPDATA[MAP_SIZE * MAP_SIZE] = {
     1, 1, 1, 1, 1, 1, 1, 1,
     1, 0, 0, 0, 0, 0, 0, 1,
     1, 0, 3, 3, 0, 0, 0, 1,
-    1, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 3, 3, 0, 0, 1,
     1, 0, 0, 0, 0, 0, 0, 1,
     1, 0, 0, 0, 0, 0, 0, 1,
     1, 0, 0, 0, 0, 0, 0, 1,
     1, 1, 1, 1, 1, 1, 1, 1,
 };
+
+static int pos_to_index(int x, int y) {
+    return (int) x + MAP_SIZE * (int) y;
+}
 
 static void verticalLine(int x, int y0, int y1, u32 color) {
     for (int y = y0; y <= y1; y++) {
@@ -171,7 +175,7 @@ int main(int argc, char *argv[]) {
                 break;
             }
         }
-        const f32 rotspeed = 1.0f * 0.016f, movespeed = 3.0f * 0.016f;
+        const f32 rotspeed = 2.0f * 0.016f, movespeed = 3.0f * 0.016f;
 
         const u8 *keystate = SDL_GetKeyboardState(NULL);
 
@@ -191,17 +195,27 @@ int main(int argc, char *argv[]) {
             state.plane.y = p.x * sin(-rotspeed) + p.y * cos(-rotspeed);
         }
    
+        
+        bool up = keystate[SDL_SCANCODE_UP];
+        bool down = keystate[SDL_SCANCODE_DOWN];
 
-        if (keystate[SDL_SCANCODE_UP]) {
+        if (up || down) {
+            
+            int direction = 1;
+            if (down) { direction = -1; }
+            
+            float x = state.pos.x + state.dir.x * movespeed * direction;
+            float y = state.pos.y + state.dir.y * movespeed * direction;
 
-            state.pos.x += state.dir.x * movespeed;
-            state.pos.y += state.dir.y * movespeed;
+            int index = pos_to_index(x, y);
+
+            if (MAPDATA[index] == 0) {
+                state.pos.x = x;
+                state.pos.y = y;
+            }
         }
 
-        if (keystate[SDL_SCANCODE_DOWN]) {
-            state.pos.x -= state.dir.x * movespeed;
-            state.pos.y -= state.dir.y * movespeed;
-        }
+        
 
         memset(state.pixels, 0, sizeof(state.pixels));
         render();
