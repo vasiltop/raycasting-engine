@@ -1,2 +1,2 @@
 all:
-	gcc -I src/include -L src/lib -o main main.c -lmingw32 -lSDL2main -lSDL2 -mwindows
+	gcc -o main main.c `sdl2-config --cflags --libs` -lm 
