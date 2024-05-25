@@ -96,13 +96,11 @@ static void render() {
                 ipos.y += step.y;
                 side = 1;
             }
-
-            ASSERT(
-                ipos.x >= 0
-                && ipos.x < MAP_SIZE
-                && ipos.y >= 0
-                && ipos.y < MAP_SIZE,
-                "DDA out of bounds");
+            
+            if (ipos.x < 0 || ipos.x >= MAP_SIZE || ipos.y < 0 || ipos.y >= MAP_SIZE) {
+                state.pos.x = MAP_SIZE / 2;
+                state.pos.y = MAP_SIZE / 2;
+            }
 
             hit = MAPDATA[ipos.y * MAP_SIZE + ipos.x];
         }
