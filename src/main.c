@@ -39,7 +39,7 @@ static u8 MAPDATA[MAP_SIZE * MAP_SIZE] = {
 };
 
 static int pos_to_index(int x, int y) {
-    return (int) x + MAP_SIZE * (int) y;
+    return x + MAP_SIZE * y;
 }
 
 static void verticalLine(int x, int y0, int y1, u32 color) {
@@ -200,10 +200,10 @@ int main(int argc, char *argv[]) {
         bool down = keystate[SDL_SCANCODE_DOWN];
 
         if (up || down) {
-            
+
             int direction = 1;
             if (down) { direction = -1; }
-            
+
             float x = state.pos.x + state.dir.x * movespeed * direction;
             float y = state.pos.y + state.dir.y * movespeed * direction;
 
@@ -214,8 +214,6 @@ int main(int argc, char *argv[]) {
                 state.pos.y = y;
             }
         }
-
-        
 
         memset(state.pixels, 0, sizeof(state.pixels));
         render();
